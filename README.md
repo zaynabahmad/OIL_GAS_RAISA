@@ -264,7 +264,7 @@ After cleaning and imputing the dataset, I performed exploratory data analysis o
 * No significant negative linear correlation appeared between features and target variables.
 * Additional visual analysis was done for each feature individually, and the **interactions** between key features were visualized to understand their influence on the targets.
 
-### 📺 Visualization App
+### Visualization App
 
 All EDA visualizations (feature-wise and interaction-based) are available in a  **Streamlit dashboard** .
 
