@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import io
 
 
-# Load your data
 df = pd.read_csv("df_analysis.csv")
 
 st.set_page_config(layout="wide")
@@ -38,7 +37,7 @@ features = [
     'LateralLength', 'FluidPerFoot_imputed', 'ProppantPerFoot_imputed',
     'TVD_imputed',
     'RightDistance_filled', 'LeftDistance_filled'
-    # note: exclude categorical features since LOESS works on numerics
+    # note: exclude categorical features 
 ]
 
 st.markdown("## correlation between features ")
@@ -107,7 +106,7 @@ with col2:
     ax_g.legend()
     st.pyplot(fig_g)
 
-# Add feature description text
+# Add insights
 descriptions = {
 'BVHH_imputed': """
 **Rock Quality Insight (BVHH):**  
@@ -250,6 +249,50 @@ with col2 :
     )
     st.pyplot(fig_custom_oil.fig)
 
+
+if (
+    (target_interact_feature.lower() == 'niogor_imputed') and 
+    (selected_bin_feature.lower() == 'bvhh_imputed')
+):
+    st.markdown("###  Insight Summary")
+    
+    st.markdown("""
+    ####  **Gas EUR**
+    - **Increases strongly** with NioGOR, especially at **higher BVHH**.
+    - For all BVHH bins, as NioGOR increases, **Gas EUR increases** — but **dramatically** in the *high BVHH* bin.
+    - This reflects that **better rock quality (high BVHH)** combined with **gas-rich reservoir (high NioGOR)** leads to significantly more **Gas EUR**.
+
+    ####  **Oil EUR**
+    - Shows a **non-linear trend**:
+        - Peaks at **medium BVHH + low NioGOR** (~21.52).
+        - Then **declines** as NioGOR increases, even in better rocks.
+        - At **high BVHH + high NioGOR**, Oil EUR drops to around **18.45**.
+    - This suggests that **higher NioGOR** indicates **more gas-dominant flow**, which might **reduce oil production**.
+    - Possibly the **fluid composition (GOR)** dominates what gets produced from the well.
+    """)
+
+if target_interact_feature == 'ProppantPerFoot_imputed' and selected_bin_feature == 'BVHH_imputed':
+    st.markdown("###  Insight Summary: Proppant Use vs Rock Quality (BVHH)")
+    
+    st.markdown(
+        """
+        **Gas EUR Trends:**
+
+        - In **low to medium BVHH (poor to average rock)**: increasing proppant leads to **higher gas EUR**, as expected.
+        - In **high BVHH (high rock quality)**:
+            - Gas EUR initially increases with proppant, but eventually **plateaus** or **declines**.
+            - This suggests **diminishing returns** or even **damage** from excessive stimulation.
+            - **Codell and high-quality Niobrara** may benefit from **less aggressive proppant strategies**.
+
+        **Oil EUR Trends:**
+
+        - In **low and medium BVHH**, more proppant leads to a **slight increase** in oil EUR.
+        - In **high BVHH**, oil production becomes **less responsive** to added proppant.
+
+        **Takeaway:** 
+        Completion design should be **rock-aware** — using too much proppant in high-quality zones can be **counterproductive**.
+        """
+    )
 
 
 
